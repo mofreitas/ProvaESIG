@@ -1,0 +1,110 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"> <!--Adciona o placeholder no input-->
+    <h:head>
+        <title>TODO</title>
+        
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+
+        <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+
+        <!-- Popper JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
+        <!-- Latest compiled JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> 
+        
+        <!--Font awesome icons -->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous"/>
+        
+        <style type="text/css">
+            .ui-row-editor .ui-row-editor-pencil {
+                margin-left:8px;
+            }
+            
+            .no-select{
+                -webkit-user-select: none; /* Safari 3.1+ */
+                -moz-user-select: none; /* Firefox 2+ */
+                -ms-user-select: none; /* IE 10+ */
+                user-select: none; /* Standard syntax */
+            }
+            
+            .tree-table-no-header thead {
+                display: none;
+            }
+            
+            .ui-datatable td {
+                border-width : 1px 0px 1px 0px !important;
+            }
+        </style>
+    </h:head>
+    
+    <h:body>
+        <nav class="navbar navbar-expand-sm">
+            <!-- Brand/logo -->
+            <a class="navbar-brand" href="#">TodoApp</a>
+
+
+        </nav>
+        
+        <div class="row" style="margin-top: 50px;">
+            <div class="col-md-3"/> <!--Div usado apenas para centralizar conteudo do meio -->
+            
+            <h:form id="form" styleClass="col-md-6">
+                <div style="display: flex; margin-bottom: 5px;">
+                    <p:inputText style="flex-grow:1;" pt:placeholder="Digite sua tarefa" id="descricao_tarefa" value="#{resposta.descricao_Tarefa}"/> 
+                    
+                    <!-- Usando commandButton do JSF, pois o do primefaces não funciona nesse caso -->
+                    <h:commandButton style="width:100px" id="inserir" value="Adicionar"> 
+                        <f:ajax listener="#{resposta.inseretarefa()}" execute="descricao_tarefa" render="tabela descricao_tarefa"/>
+                    </h:commandButton>     
+                    <p:defaultCommand target="inserir"/> <!--Ao pressionar enter, commandBUtton inserir é acionado-->
+                </div>
+                
+                <!--var -> variavel que usará para receber o item de cada lista, como se fosse um foreach-->
+                <p:dataTable styleClass="tree-table-no-header" var="tar" id="tabela" value="#{resposta.tarefas}" rowKey="#{tar.id}" editable="true" >
+                    <p:ajax event="rowEdit" listener="#{resposta.onRowEdit}" update=":form:tabela" />
+
+                    <p:column style="text-align: left; width: 32px;">
+                        <p:commandLink id="finaliza" action="#{resposta.inverteStatus(tar)}" update=":form:tabela">
+                            <i class="#{tar.icone}"/>
+                        </p:commandLink>
+                    </p:column>
+
+                    <p:column>     
+                        <p:cellEditor>
+                            <!--Usando createQUery em tarefaDAO, acessamos cada elemento da forma: elemento.atributo
+                            Usando createNativeQuery, acessmos usando tar[numero do atributo] -->
+                            <f:facet name="output"><h:outputText class="no-select" value="#{tar.descricao}" /></f:facet>
+                            <f:facet name="input">
+                                <p:inputText id="modelInput" value="#{tar.descricao}" style="width:96%"/></f:facet>
+                        </p:cellEditor>                        
+                    </p:column>
+
+                    <p:column style="text-align: right; width: 60px;">
+                        <p:rowEditor/>
+                    </p:column>
+
+                    <p:column style="text-align: left; width: 40px;">
+                        <p:commandLink action="#{resposta.removeTarefa(tar)}" update="tabela" >                  
+                            <i class="fas fa-times-circle"></i>
+                        </p:commandLink>
+                    </p:column>
+
+                    <f:facet name="footer">
+                        <p:commandButton actionListener="#{resposta.setOpcao(2)}" update=":form:tabela" value="Todos"/>
+                        <p:commandButton actionListener="#{resposta.setOpcao(0)}" update=":form:tabela" value="Ativos"/>
+                        <p:commandButton actionListener="#{resposta.setOpcao(1)}" update=":form:tabela" value="Feitos"/>
+                    </f:facet>
+                </p:dataTable>
+            </h:form>
+            <div class="col-md-3"/> <!--Div usado apenas para centralizar conteudo do meio -->
+        </div>            
+    </h:body>
+</html>
