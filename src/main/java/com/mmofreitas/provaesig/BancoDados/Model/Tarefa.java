@@ -7,11 +7,13 @@ package com.mmofreitas.provaesig.BancoDados.Model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -39,6 +41,8 @@ public class Tarefa implements Serializable {
     @Column
     @CreationTimestamp
     private LocalDateTime timestamp;
+    @ManyToOne(cascade = CascadeType.MERGE)
+    private Usuario usuario;
 
     //tem que ter para funcionar o createQuery
     public Tarefa(){}
@@ -79,6 +83,14 @@ public class Tarefa implements Serializable {
 
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
     
     public String getIcone()

@@ -50,6 +50,14 @@
             <!-- Brand/logo -->
             <a class="navbar-brand" href="#">TodoApp</a>
 
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                    <h:outputText value="#{resposta.usuario}" />
+                </a>
+                <div class="dropdown-menu">
+                    <h:commandLink value="Log out" action="#{resposta.logout}" styleClass="dropdown-item"/>
+                </div>
+              </li>
 
         </nav>
         

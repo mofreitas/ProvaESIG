@@ -13,12 +13,16 @@
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>/faces/*</url-pattern>
     </servlet-mapping>
+    
+    <!--Define tempo de sessão-->
     <session-config>
         <session-timeout>
             30
         </session-timeout>
     </session-config>
+    <!--Página inicial do projeto-->
     <welcome-file-list>
-        <welcome-file>faces/index.xhtml</welcome-file>
+        <welcome-file>faces/paraTodos/login.xhtml</welcome-file>
     </welcome-file-list>
-</web-app>
+    <!--Define tempo de sessão-->
+    </web-app>

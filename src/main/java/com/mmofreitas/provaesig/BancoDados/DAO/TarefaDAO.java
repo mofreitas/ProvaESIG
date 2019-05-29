@@ -6,6 +6,7 @@
 package com.mmofreitas.provaesig.BancoDados.DAO;
 
 import com.mmofreitas.provaesig.BancoDados.Model.Tarefa;
+import com.mmofreitas.provaesig.BancoDados.Model.Usuario;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -45,7 +46,7 @@ public class TarefaDAO {
     }
     
     public void inserirTarefa(Tarefa tarefa){
-        entityManager.getTransaction().begin( );
+        entityManager.getTransaction().begin();
         entityManager.persist(tarefa);
         entityManager.getTransaction().commit();
     }
@@ -65,24 +66,32 @@ public class TarefaDAO {
         entityManager.getTransaction().commit();
     }
     
-    public List<Tarefa> getAll(int opcao)
+    public List<Tarefa> getAll(Usuario usuario, int opcao)
     {
-        switch(opcao)
+        /*return entityManager.createQuery("from " + Usuario.class.getName()
+                + " join " + Tarefa.class.getName()
+                + " where usuarios.email = :email AND status = :status "
+                + " order by timestamp desc")
+                .setParameter("email", usuario.getEmail())
+                .setParameter("status", opcao).getResultList();*/
+        if(opcao != 2)
         {
-            case ATIVOS:
-                return entityManager.createQuery("from " + Tarefa.class.getName() + 
-                        " where status = " + String.valueOf(opcao) +
-                        " order by timestamp desc").getResultList();
-            case FEITOS:
-                return entityManager.createQuery("from " + Tarefa.class.getName() + 
-                        " where status = " + String.valueOf(opcao) +
-                        " order by timestamp desc").getResultList();
-            case TODOS:
-            default:
-                return entityManager.createQuery("from " + Tarefa.class.getName() +
-                    " order by timestamp desc").getResultList();
+            return entityManager.createQuery(
+                    "SELECT t FROM Tarefa t " +
+                    " where t.status = :status AND t.usuario = :usuario " +
+                    " order by timestamp desc")
+                    .setParameter("usuario", usuario)
+                    .setParameter("status", opcao).getResultList();
         }
-        
+        else
+        {
+            return entityManager.createQuery(
+                "SELECT t FROM Tarefa t " +
+                " WHERE t.usuario = :usuario " +
+                " order by timestamp desc")
+                .setParameter("usuario", usuario).getResultList();
+        }
+
         //Modificar para <h:outputText value="#{todo[numero da coluna]}
         //eturn entityManager.createNativeQuery("select * from tarefas").getResultList();
     }

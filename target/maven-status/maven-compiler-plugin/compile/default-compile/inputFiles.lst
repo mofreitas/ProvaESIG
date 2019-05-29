@@ -1,4 +1,9 @@
 /home/matheus/NetBeansProjects/ProvaESIG/src/main/java/com/mmofreitas/provaesig/ManagedBeans/Resposta.java
+/home/matheus/NetBeansProjects/ProvaESIG/src/main/java/com/mmofreitas/provaesig/ManagedBeans/LoginBean.java
 /home/matheus/NetBeansProjects/ProvaESIG/src/main/java/com/mmofreitas/provaesig/BancoDados/Model/Tarefa.java
+/home/matheus/NetBeansProjects/ProvaESIG/src/main/java/com/mmofreitas/provaesig/ManagedBeans/CadastroBean.java
 /home/matheus/NetBeansProjects/ProvaESIG/src/main/java/com/mmofreitas/provaesig/BancoDados/DAO/TarefaDAO.java
-/home/matheus/NetBeansProjects/ProvaESIG/src/main/java/com/mmofreitas/provaesig/BancoDados/Model/LazyTodoDataModel.java
+/home/matheus/NetBeansProjects/ProvaESIG/src/main/java/com/mmofreitas/provaesig/Session/SessionManager.java
+/home/matheus/NetBeansProjects/ProvaESIG/src/main/java/com/mmofreitas/provaesig/BancoDados/Model/Usuario.java
+/home/matheus/NetBeansProjects/ProvaESIG/src/main/java/com/mmofreitas/provaesig/Session/LoginFilter.java
+/home/matheus/NetBeansProjects/ProvaESIG/src/main/java/com/mmofreitas/provaesig/BancoDados/DAO/UsuarioDAO.java
