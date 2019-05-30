@@ -34,31 +34,29 @@ Foi implementado um sistema de listagem de tarefas semelhante ao exemplo deste [
 
 - PostgreSQL
 - Linux
-- Java 8
-```
-$ sudo apt-get install openjdk-8-jre
-``` 
-- [glassfish 5](https://javaee.github.io/glassfish/download)
+- Maven ```$ sudo apt install maven```
+- Java 8 ```$ sudo apt install openjdk-8-jre``` 
+- [Glassfish 5](https://javaee.github.io/glassfish/download)
 
-// aqui-> /usr/lib/jvm/java-8-oracle
-Na pasta do projeto, executamos a seguinte linha de comando:
+## Procedimentos
+
+Dentro da pasta do projeto, executamos o seguinte comando:
 
 ```
 $ mvn package
 ```
 
-Na pasta onde o glassfish foi extraído, editamos o arquivo glassfish5/bin/asenv.conf, adicionando o local da instalação do java sob a variável AS_JAVA:
+A seguir, na pasta onde o glassfish foi extraído, editamos o arquivo glassfish5/bin/asenv.conf, adicionando o local da instalação do java sob a variável AS_JAVA:
 
 ```
 AS_JAVA="/usr/lib/jvm/java-8-openjdk-amd64"
 ```
 
-O deploy é feito abrindo a pasta glassfish5/bin e executando:
+Então podemos fazer o deploy abrindo a pasta glassfish5/bin e executando:
 
 ```
 $ ./asadmin start-domain domain1
-$ ./asadmin \[pasta do projeto\]/target/ProvaEsig-1.0-SNAPSHOT.war
-
+$ ./asadmin [pasta do projeto]/target/ProvaEsig-1.0-SNAPSHOT.war
 ```
 
 
