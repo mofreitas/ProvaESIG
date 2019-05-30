@@ -32,9 +32,9 @@ Foi implementado um sistema de listagem de tarefas semelhante ao exemplo deste [
 
 ## Requisitos
 
-- PostgreSQL
+- PostgreSQL `$ sudo apt install postgresql-all`
 - Linux
-- Netbeans
+- [Netbeans](https://netbeans.apache.org/download/)
 - Maven `$ sudo apt install maven`
 - Java 8 `$ sudo apt install openjdk-8-jre` 
 - [Glassfish 5](https://javaee.github.io/glassfish/download)
