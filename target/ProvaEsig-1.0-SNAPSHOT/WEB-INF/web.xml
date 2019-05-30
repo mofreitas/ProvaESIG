@@ -9,10 +9,23 @@
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
+    <!--removendo "/faces/*" de url-pattern, removemos /faces da url-->
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
-        <url-pattern>/faces/*</url-pattern>
+        <url-pattern>*.xhtml</url-pattern>
     </servlet-mapping>
+    
+    <!--Define a classe do filtro-->
+    <filter>
+        <filter-name>LoginFilter</filter-name>
+        <filter-class>com.mmofreitas.provaesig.Session.LoginFilter</filter-class>    
+    </filter>
+    
+    <!--Define a pasta que contem as págidas cujo acesso será filtrado-->
+    <filter-mapping>
+        <filter-name>LoginFilter</filter-name>
+        <url-pattern>/paraLogados/*</url-pattern>
+    </filter-mapping>
     
     <!--Define tempo de sessão-->
     <session-config>
@@ -22,7 +35,7 @@
     </session-config>
     <!--Página inicial do projeto-->
     <welcome-file-list>
-        <welcome-file>faces/paraTodos/login.xhtml</welcome-file>
+        <welcome-file>paraTodos/login.xhtml</welcome-file>
     </welcome-file-list>
     <!--Define tempo de sessão-->
     </web-app>

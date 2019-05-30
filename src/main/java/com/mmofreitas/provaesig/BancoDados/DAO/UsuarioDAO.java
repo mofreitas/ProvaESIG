@@ -5,11 +5,13 @@
  */
 package com.mmofreitas.provaesig.BancoDados.DAO;
 
-import com.mmofreitas.provaesig.BancoDados.Model.Usuario;
+import com.mmofreitas.provaesig.BancoDados.Entities.Usuario;
 import java.util.List;
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import org.hibernate.exception.ConstraintViolationException;
 
 /**
  *
@@ -43,9 +45,17 @@ public class UsuarioDAO {
     
     public void insereUsuario(Usuario usuario)
     {
-        entityManager.getTransaction().begin();
-        entityManager.persist(usuario);
-        entityManager.getTransaction().commit();
+        try
+        {
+            entityManager.getTransaction().begin();
+            entityManager.persist(usuario);
+            entityManager.getTransaction().commit();
+        }
+        catch (Exception ex) {
+            //obtem excessão quando inserido mesma chave
+            entityManager.getTransaction().rollback();
+            throw ex;
+        }
     }
     
     public Usuario validaUsuarioSenha(String email, String senha)

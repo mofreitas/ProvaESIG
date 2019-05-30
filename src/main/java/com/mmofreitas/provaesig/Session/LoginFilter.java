@@ -5,7 +5,7 @@
  */
 package com.mmofreitas.provaesig.Session;
 
-import com.mmofreitas.provaesig.BancoDados.Model.Usuario;
+import com.mmofreitas.provaesig.BancoDados.Entities.Usuario;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -118,6 +118,7 @@ public class LoginFilter implements Filter {
             user = (Usuario) sess.getAttribute("usuarioLogado");
         }
 
+        //Caso usuário não possa ser obtido, redireciona para login
         if (user == null) {
             String contextPath = ((HttpServletRequest) request)
                     .getContextPath();

@@ -6,7 +6,7 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"> <!--Adciona o placeholder no input-->
     <h:head>
-        <title>TODO</title>
+        <title>TodoApp</title>
         
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
@@ -42,77 +42,92 @@
             .ui-datatable td {
                 border-width : 1px 0px 1px 0px !important;
             }
+            
+            li {
+                list-style-type: none;
+            }
         </style>
     </h:head>
     
     <h:body>
-        <nav class="navbar navbar-expand-sm">
+        <!--importa constantes para ser usada na página-->
+        <p:importConstants type="com.mmofreitas.provaesig.Constantes.Constantes" var="constantes" />
+        <nav class="navbar navbar-expand-md navbar-light bg-light">
             <!-- Brand/logo -->
-            <a class="navbar-brand" href="#">TodoApp</a>
-
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                    <h:outputText value="#{resposta.usuario}" />
-                </a>
-                <div class="dropdown-menu">
-                    <h:commandLink value="Log out" action="#{resposta.logout}" styleClass="dropdown-item"/>
-                </div>
-              </li>
+            <a class="navbar-brand" href="">TodoApp</a>
+            
+            <!-- ml-auto coloca tudo para a direita -->
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="" id="navbardrop" data-toggle="dropdown">
+                        <h:outputText value="#{resposta.usuario}" />
+                    </a>
+                    <div class="dropdown-menu">
+                        <h:form>
+                        <h:commandLink class="dropdown-item" value="Sair" action="#{resposta.logout()}" />
+                        </h:form>
+                    </div>
+                </li>
+            </ul>
 
         </nav>
         
-        <div class="row" style="margin-top: 50px;">
-            <div class="col-md-3"/> <!--Div usado apenas para centralizar conteudo do meio -->
-            
-            <h:form id="form" styleClass="col-md-6">
-                <div style="display: flex; margin-bottom: 5px;">
-                    <p:inputText style="flex-grow:1;" pt:placeholder="Digite sua tarefa" id="descricao_tarefa" value="#{resposta.descricao_Tarefa}"/> 
-                    
-                    <!-- Usando commandButton do JSF, pois o do primefaces não funciona nesse caso -->
-                    <h:commandButton style="width:100px" id="inserir" value="Adicionar"> 
-                        <f:ajax listener="#{resposta.inseretarefa()}" execute="descricao_tarefa" render="tabela descricao_tarefa"/>
-                    </h:commandButton>     
-                    <p:defaultCommand target="inserir"/> <!--Ao pressionar enter, commandBUtton inserir é acionado-->
-                </div>
-                
-                <!--var -> variavel que usará para receber o item de cada lista, como se fosse um foreach-->
-                <p:dataTable styleClass="tree-table-no-header" var="tar" id="tabela" value="#{resposta.tarefas}" rowKey="#{tar.id}" editable="true" >
-                    <p:ajax event="rowEdit" listener="#{resposta.onRowEdit}" update=":form:tabela" />
+        <div class="container" style="margin-top: 30px;">
+            <div class="row">
+                <div class="col-md-3"/> <!--Div usado apenas para centralizar conteudo do meio -->
 
-                    <p:column style="text-align: left; width: 32px;">
-                        <p:commandLink id="finaliza" action="#{resposta.inverteStatus(tar)}" update=":form:tabela">
-                            <i class="#{tar.icone}"/>
-                        </p:commandLink>
-                    </p:column>
+                <h:form id="form" styleClass="col-md-6">
+                    <div style="display: flex; margin-bottom: 5px;">
+                        <p:inputText style="flex-grow:1; min-width: 100px"  pt:placeholder="Digite sua tarefa" id="descricao_tarefa" value="#{resposta.descricao_Tarefa}"/> 
 
-                    <p:column>     
-                        <p:cellEditor>
-                            <!--Usando createQUery em tarefaDAO, acessamos cada elemento da forma: elemento.atributo
-                            Usando createNativeQuery, acessmos usando tar[numero do atributo] -->
-                            <f:facet name="output"><h:outputText class="no-select" value="#{tar.descricao}" /></f:facet>
-                            <f:facet name="input">
-                                <p:inputText id="modelInput" value="#{tar.descricao}" style="width:96%"/></f:facet>
-                        </p:cellEditor>                        
-                    </p:column>
+                        <!-- Usando commandButton do JSF, pois o do primefaces não funciona nesse caso -->
+                        <h:commandButton style="width:100px" id="inserir" value="Adicionar"> 
+                            <f:ajax listener="#{resposta.inseretarefa()}" execute="descricao_tarefa" render="tabela descricao_tarefa"/>
+                        </h:commandButton>     
+                        <p:defaultCommand target="inserir"/> <!--Ao pressionar enter, commandBUtton inserir é acionado-->
+                    </div>
 
-                    <p:column style="text-align: right; width: 60px;">
-                        <p:rowEditor/>
-                    </p:column>
+                    <!--var -> variavel que usará para receber o item de cada lista, como se fosse um foreach-->
+                    <p:dataTable styleClass="tree-table-no-header" var="tar" id="tabela" value="#{resposta.tarefas}" rowKey="#{tar.id}" editable="true" emptyMessage="Sem registros encontrados">
+                        <p:ajax event="rowEdit" listener="#{resposta.onRowEdit}" update=":form:tabela" />
 
-                    <p:column style="text-align: left; width: 40px;">
-                        <p:commandLink action="#{resposta.removeTarefa(tar)}" update="tabela" >                  
-                            <i class="fas fa-times-circle"></i>
-                        </p:commandLink>
-                    </p:column>
+                        <p:column style="text-align: left; width: 32px;">
+                            <p:commandLink id="finaliza" action="#{resposta.inverteStatus(tar)}" update=":form:tabela">
+                                <i class="#{tar.icone}"/>
+                            </p:commandLink>
+                        </p:column>
 
-                    <f:facet name="footer">
-                        <p:commandButton actionListener="#{resposta.setOpcao(2)}" update=":form:tabela" value="Todos"/>
-                        <p:commandButton actionListener="#{resposta.setOpcao(0)}" update=":form:tabela" value="Ativos"/>
-                        <p:commandButton actionListener="#{resposta.setOpcao(1)}" update=":form:tabela" value="Feitos"/>
-                    </f:facet>
-                </p:dataTable>
-            </h:form>
-            <div class="col-md-3"/> <!--Div usado apenas para centralizar conteudo do meio -->
-        </div>            
+                        <p:column>     
+                            <p:cellEditor>
+                                <!--Usando createQUery em tarefaDAO, acessamos cada elemento da forma: elemento.atributo
+                                Usando createNativeQuery, acessmos usando tar[numero do atributo] -->
+                                <f:facet name="output"><h:outputText class="no-select" value="#{tar.descricao}" /></f:facet>
+                                <f:facet name="input">
+                                    <p:inputText id="modelInput" value="#{tar.descricao}" style="width:96%"/></f:facet>
+                            </p:cellEditor>                        
+                        </p:column>
+
+                        <p:column style="text-align: right; width: 60px;">
+                            <p:rowEditor/>
+                        </p:column>
+
+                        <p:column style="text-align: left; width: 40px;">
+                            <p:commandLink action="#{resposta.removeTarefa(tar)}" update="tabela" >                  
+                                <i class="fas fa-times-circle"></i>
+                            </p:commandLink>
+                        </p:column>
+
+                        
+                        <f:facet name="footer">
+                            <!--Opções definas para a query-->
+                            <p:commandButton actionListener="#{resposta.setOpcao(constantes.TODOS)}" update=":form:tabela" value="Todos"/>
+                            <p:commandButton actionListener="#{resposta.setOpcao(constantes.ATIVOS)}" update=":form:tabela" value="Ativos"/>
+                            <p:commandButton actionListener="#{resposta.setOpcao(constantes.FEITOS)}" update=":form:tabela" value="Feitos"/>
+                        </f:facet>
+                    </p:dataTable>
+                </h:form>
+                <div class="col-md-3"/> <!--Div usado apenas para centralizar conteudo do meio -->
+            </div> 
+        </div>
     </h:body>
 </html>

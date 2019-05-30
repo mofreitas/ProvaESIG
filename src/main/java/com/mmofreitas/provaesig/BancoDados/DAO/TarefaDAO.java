@@ -5,8 +5,10 @@
  */
 package com.mmofreitas.provaesig.BancoDados.DAO;
 
-import com.mmofreitas.provaesig.BancoDados.Model.Tarefa;
-import com.mmofreitas.provaesig.BancoDados.Model.Usuario;
+import com.mmofreitas.provaesig.BancoDados.Entities.Tarefa;
+import com.mmofreitas.provaesig.BancoDados.Entities.Usuario;
+import com.mmofreitas.provaesig.Constantes.Constantes;
+import com.mmofreitas.provaesig.ManagedBeans.Resposta;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -19,9 +21,6 @@ import javax.persistence.Persistence;
 public class TarefaDAO {
     private static TarefaDAO instance;
     protected EntityManager entityManager;
-    public final static int TODOS = 2;    
-    public final static int FEITOS = 1;    
-    public final static int ATIVOS = 0;
           
     public static TarefaDAO getInstance(){
         if (instance == null){
@@ -45,36 +44,54 @@ public class TarefaDAO {
         entityManager = getEntityManager();
     }
     
-    public void inserirTarefa(Tarefa tarefa){
-        entityManager.getTransaction().begin();
-        entityManager.persist(tarefa);
-        entityManager.getTransaction().commit();
+    public void inserirTarefa(Tarefa tarefa)
+    {
+        try
+        {
+            entityManager.getTransaction().begin();
+            entityManager.persist(tarefa);
+            entityManager.getTransaction().commit();
+        }
+        catch (Exception ex) {
+            //obtem excessão quando inserido mesma chave
+            entityManager.getTransaction().rollback();
+            ex.printStackTrace();
+        }
     }
     
     public void atualizarTarefa(Tarefa tarefa)
     {
-        entityManager.getTransaction().begin();
-        entityManager.merge(tarefa);
-        entityManager.getTransaction().commit();
+        try
+        {
+            entityManager.getTransaction().begin();
+            entityManager.merge(tarefa);
+            entityManager.getTransaction().commit();
+        }
+        catch (Exception ex) {
+            //obtem excessão quando inserido mesma chave
+            entityManager.getTransaction().rollback();
+            ex.printStackTrace();
+        }
     }
     
     public void removerTarefa(Tarefa tarefa)
     {
-        entityManager.getTransaction().begin();
-        //cliente = entityManager.find(Cliente.class, cliente.getId());
-        entityManager.remove(tarefa);
-        entityManager.getTransaction().commit();
+        try
+        {
+            entityManager.getTransaction().begin();
+            entityManager.remove(tarefa);
+            entityManager.getTransaction().commit();
+        }
+        catch (Exception ex) {
+            //obtem excessão quando inserido mesma chave
+            entityManager.getTransaction().rollback();
+            ex.printStackTrace();
+        }
     }
     
     public List<Tarefa> getAll(Usuario usuario, int opcao)
     {
-        /*return entityManager.createQuery("from " + Usuario.class.getName()
-                + " join " + Tarefa.class.getName()
-                + " where usuarios.email = :email AND status = :status "
-                + " order by timestamp desc")
-                .setParameter("email", usuario.getEmail())
-                .setParameter("status", opcao).getResultList();*/
-        if(opcao != 2)
+        if(opcao != Constantes.TODOS)
         {
             return entityManager.createQuery(
                     "SELECT t FROM Tarefa t " +
@@ -92,13 +109,7 @@ public class TarefaDAO {
                 .setParameter("usuario", usuario).getResultList();
         }
 
-        //Modificar para <h:outputText value="#{todo[numero da coluna]}
-        //eturn entityManager.createNativeQuery("select * from tarefas").getResultList();
-    }
-    
-    public List<Tarefa> getFinalizadas()
-    {
-        return null;
-    }
-    
+        //Modificar para <h:outputText value="#{todo[numero da coluna]} quendo utilizamos
+        //entityManager.createNativeQuery("select * from tarefas").getResultList();
+    }    
 }

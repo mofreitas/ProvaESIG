@@ -3,7 +3,6 @@
   <persistence-unit name="Hibernate_Postgres" transaction-type="RESOURCE_LOCAL">
     <provider>org.hibernate.ejb.HibernatePersistence</provider>
     <non-jta-data-source>java:app/Tarefas</non-jta-data-source>
-    <validation-mode>NONE</validation-mode>
     <properties>
       <property name="javax.persistence.schema-generation.database.action" value="create"/>
       <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>

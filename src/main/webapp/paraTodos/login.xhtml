@@ -11,7 +11,7 @@ and open the template in the editor.
       xmlns:p="http://primefaces.org/ui"
       xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
     <h:head>
-        <title>Bootstrap Example</title>
+        <title>TodoApp - Login</title>
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <!-- Latest compiled and minified CSS -->
@@ -35,14 +35,14 @@ and open the template in the editor.
     </h:head>
     <h:body>
 
-        <nav class="navbar navbar-expand-sm">
+        <nav class="navbar navbar-expand-sm  navbar-light bg-light">
           <!-- Brand/logo -->
-          <a class="navbar-brand" href="#">TODO</a>
+          <a class="navbar-brand" href="">TodoApp</a>
 
 
         </nav>
 
-        <div class="container col-md-4">
+        <div class="container col-md-4"  style="margin-top: 30px;">
             <h:form class="form-group">
                 <h2>Login</h2>
                 <hr/>
@@ -54,13 +54,12 @@ and open the template in the editor.
                     <label for="pwd">Senha:</label>
                     <p:password value="#{loginBean.senha}" styleClass="form-control" id="pwd"/>
                 </div>
+                <!--Componente que exibe as mensagens -->
                 <h:messages globalOnly="true" styleClass="error"/>
                 <div class="clearfix">
-                    <h:commandButton type="submit" action="#{loginBean.validaEmailSenha}" class="btn btn-primary float-left" value="Entrar"/>
-                    
-
-                    <h:commandButton type="submit" class="btn btn-secondary float-right" value="Cadastro" action="cadastro">
-                    </h:commandButton>
+                    <h:commandButton id="login" type="submit" action="#{loginBean.validaEmailSenha}" class="btn btn-primary float-left" value="Entrar"/>
+                    <h:button class="btn btn-secondary float-right" value="Cadastro" outcome="cadastro"/>
+                    <p:defaultCommand target="login" />
                 </div>
             </h:form>
         </div>

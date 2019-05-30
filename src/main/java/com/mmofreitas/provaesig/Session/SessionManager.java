@@ -1,6 +1,6 @@
 package com.mmofreitas.provaesig.Session;
 
-import com.mmofreitas.provaesig.BancoDados.Model.Usuario;
+import com.mmofreitas.provaesig.BancoDados.Entities.Usuario;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;

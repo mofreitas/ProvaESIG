@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mmofreitas.provaesig.BancoDados.Model;
+package com.mmofreitas.provaesig.BancoDados.Entities;
 
+import com.mmofreitas.provaesig.Constantes.Constantes;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import javax.persistence.CascadeType;
@@ -21,15 +22,9 @@ import org.hibernate.annotations.CreationTimestamp;
  *
  * @author matheus
  */
-
 @Entity
 @Table(name = "tarefas")
 public class Tarefa implements Serializable {
-    
-    public final static int ATIVO = 0;
-    public final static int FEITO = 1;
-    public final static String ICONE_ATIVO = "far fa-square";
-    public final static String ICONE_FEITO = "far fa-check-square";
     
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE)
@@ -95,13 +90,13 @@ public class Tarefa implements Serializable {
     
     public String getIcone()
     {
-        if(this.status == ATIVO)
+        if(this.status == Constantes.ATIVO)
         {
-            return ICONE_ATIVO;
+            return Constantes.ICONE_ATIVO;
         }
         else
         {
-            return ICONE_FEITO;
+            return Constantes.ICONE_FEITO;
         }
     }
 

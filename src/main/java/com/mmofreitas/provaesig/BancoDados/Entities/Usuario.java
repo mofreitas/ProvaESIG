@@ -1,4 +1,4 @@
-package com.mmofreitas.provaesig.BancoDados.Model;
+package com.mmofreitas.provaesig.BancoDados.Entities;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -33,8 +33,6 @@ public class Usuario implements Serializable {
     private String senha;
     @Column
     private String ultimo_nome;
-    //@OneToMany(cascade = CascadeType.ALL)    
-    //private List<Tarefa> tarefas;
     
     public Usuario(){}
 
@@ -69,14 +67,6 @@ public class Usuario implements Serializable {
         this.ultimo_nome = ultimo_nome;
     }
 
-    /*public List<Tarefa> getTarefas() {
-        return tarefas;
-    }
-
-    public void setTarefas(List<Tarefa> tarefas) {
-        this.tarefas = tarefas;
-    }*/
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -106,8 +96,7 @@ public class Usuario implements Serializable {
     {
         MessageDigest mDigest;
         try {
-            //Instanciamos o nosso HASH MD5, poderíamos usar outro como
-            //SHA, por exemplo, mas optamos por MD5.
+            //Instanciamos o nosso HASH MD5
             mDigest = MessageDigest.getInstance("MD5");
 
             //Convert a String valor para um array de bytes em MD5

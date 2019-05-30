@@ -6,25 +6,22 @@
 package com.mmofreitas.provaesig.ManagedBeans;
 
 import com.mmofreitas.provaesig.BancoDados.DAO.TarefaDAO;
-import com.mmofreitas.provaesig.BancoDados.Model.Tarefa;
-import com.mmofreitas.provaesig.BancoDados.Model.Usuario;
+import com.mmofreitas.provaesig.BancoDados.Entities.Tarefa;
+import com.mmofreitas.provaesig.BancoDados.Entities.Usuario;
+import com.mmofreitas.provaesig.Constantes.Constantes;
 import com.mmofreitas.provaesig.Session.SessionManager;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.view.ViewScoped;
-import org.primefaces.event.CellEditEvent;
+import javax.faces.bean.SessionScoped;
 import org.primefaces.event.RowEditEvent;
-import org.primefaces.event.SelectEvent;
 
 /**
  *
  * @author matheus
  */
 @ManagedBean(name = "resposta")
-@ViewScoped
+@SessionScoped
 public class Resposta implements Serializable{
     private TarefaDAO tarefaDAO;
     private int opcao;
@@ -37,15 +34,16 @@ public class Resposta implements Serializable{
      * Creates a new instance of Resposta
      */
     public Resposta() {
-        opcao = TarefaDAO.TODOS;
+        opcao = 2;
         tarefaDAO = TarefaDAO.getInstance();
+        
+        //Obtem usuario da sessionmanager
         usuario = SessionManager.getInstance().getUsuarioLogado();
         tarefas = tarefaDAO.getAll(usuario, opcao);
         descricao_tarefa = "";
     }
 
     public List<Tarefa> getTarefas() {
-        System.out.println("fala");
         return tarefas;
     }
     
@@ -58,12 +56,14 @@ public class Resposta implements Serializable{
     
     public void removeTarefa(Tarefa tarefa)
     {
+        System.out.println("Removendo: " + String.valueOf(tarefa.getId()) + " - " + tarefa.getDescricao());
         tarefaDAO.removerTarefa(tarefa);
         tarefas = tarefaDAO.getAll(usuario, opcao);
     }
     
     public void inseretarefa()
     {
+        //Apenas insere tarefa se a descrição não tiver vazia
         if(!descricao_tarefa.isEmpty())
         {
             Tarefa t = new Tarefa(descricao_tarefa);            
@@ -86,20 +86,19 @@ public class Resposta implements Serializable{
         return status;
     }
 
+    //Atualiza status da tarefa
     public void inverteStatus(Tarefa tarefa) {
         System.out.println("Editando: " + String.valueOf(tarefa.getId()) + " - " + tarefa.getDescricao());
-        if(tarefa.getStatus() == Tarefa.ATIVO)
+        if(tarefa.getStatus() == Constantes.ATIVO)
         {
-            tarefa.setStatus(Tarefa.FEITO);
+            tarefa.setStatus(Constantes.FEITO);
         }
         else 
         {
-            tarefa.setStatus(Tarefa.ATIVO);
+            tarefa.setStatus(Constantes.ATIVO);
         }
         tarefa.setUsuario(usuario);
         tarefaDAO.atualizarTarefa(tarefa);
-        
-        tarefas = tarefaDAO.getAll(usuario, opcao);   
     }
     
     public void setOpcao(int opcao)
@@ -111,12 +110,21 @@ public class Resposta implements Serializable{
     
     public String getUsuario()
     {
-        String apresentacao = usuario.getNome() + " " + usuario.getUltimo_nome();
-        return "Olá, " + apresentacao;
+        //Retorma mensagem de bem vindo do usuário
+        try
+        {
+            String apresentacao = usuario.getNome() + " " + usuario.getUltimo_nome();
+            return "Olá, " + apresentacao;
+        }
+        catch(NullPointerException npe)
+        {
+            return "";
+        }
     }
     
     public String logout()
     {
+        //Encerra sessão do usuário
         SessionManager.getInstance().encerrarSessao();
         return "/paraTodos/login.xhtml?faces-redirect=true";
     }

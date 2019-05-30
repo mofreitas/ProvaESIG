@@ -6,7 +6,7 @@
 package com.mmofreitas.provaesig.ManagedBeans;
 
 import com.mmofreitas.provaesig.BancoDados.DAO.UsuarioDAO;
-import com.mmofreitas.provaesig.BancoDados.Model.Usuario;
+import com.mmofreitas.provaesig.BancoDados.Entities.Usuario;
 import com.mmofreitas.provaesig.Session.SessionManager;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -14,7 +14,10 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
+import javax.faces.validator.FacesValidator;
 import javax.faces.validator.ValidatorException;
+import javax.persistence.EntityExistsException;
+import org.hibernate.exception.ConstraintViolationException;
 
 /**
  *
@@ -28,6 +31,7 @@ public class CadastroBean {
     private String ultimo_nome;
     private String senha;
     private String repet_senha;
+    private UIComponent email_input;
     
     /**
      * Creates a new instance of CadastroBean
@@ -45,6 +49,14 @@ public class CadastroBean {
 
     public String getNome() {
         return nome;
+    }
+
+    public UIComponent getEmail_input() {
+        return email_input;
+    }
+
+    public void setEmail_input(UIComponent email_input) {
+        this.email_input = email_input;
     }
 
     public void setNome(String nome) {
@@ -76,13 +88,26 @@ public class CadastroBean {
     }
     
     public String cadastraUsuario()
-    {
+    {   
+        //Obtem o MD5 da senha e tenta inserir no banco
         String senhaMD5 = Usuario.senhaToMD5(senha);
         UsuarioDAO usuarioDAO = UsuarioDAO.getInstance();
-        Usuario usuario = new Usuario(email, nome, ultimo_nome, senhaMD5);
-        usuarioDAO.insereUsuario(usuario);
-        SessionManager.getInstance().setAttribute("usuarioLogado", usuario);
+        Usuario usuario = new Usuario(email.trim(), nome.trim(), ultimo_nome.trim(), senhaMD5);
+        try
+        {
+            //Uma vez que inserção funcione, ele é redirecionado para pagina de todo
+            usuarioDAO.insereUsuario(usuario);
+            SessionManager.getInstance().setAttribute("usuarioLogado", usuario);
+        }
+        catch (Exception e)
+        {
+            //Caso email já tenha sido cadastrado, manda mensagem para usuário
+            FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(email_input.getClientId(context), new FacesMessage("Email já cadastrado"));
+            return "";
+        }
         return "/paraLogados/index.xhtml?faces-redirect=true";
+        
     }
     
     //Formas de validação
@@ -112,15 +137,23 @@ public class CadastroBean {
     //Para validar em conjuntro com outros input
     //https://stackoverflow.com/questions/7608145/how-to-get-the-value-of-another-component-in-a-custom-validator
     public void validateSenha2(FacesContext context, UIComponent component, Object value) throws ValidatorException {
-        String msg = "Ambas as senhas inseridas devem ser iguais";
-        UIInput startComponent = (UIInput) component.getAttributes().get("senha");
-        String senha = startComponent.getValue().toString();
-        String senha_confirma = value.toString();
+        String msg = "As senhas inseridas devem ser iguais";
         
-        if(!senha_confirma.equals(senha))
+        //Qunado a validação de um componente anterior falha, ela é definida para nulo
+        try
         {
-            throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, msg));
+            //obtem o valor de senha_input passador pelo f:attribute
+            UIInput startComponent = (UIInput) component.getAttributes().get("senha_input");
+            String senha = startComponent.getValue().toString();
+            String senha_confirma = value.toString();
+            if(!senha_confirma.equals(senha))
+            {
+                throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, msg));
+            }
         }
+        catch(NullPointerException npe)
+        {
+            System.out.println("nulo");
+        }  
     }
-    
 }

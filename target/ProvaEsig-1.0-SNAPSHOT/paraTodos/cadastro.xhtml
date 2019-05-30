@@ -27,14 +27,16 @@ and open the template in the editor.
     </h:head>
 <h:body>
 
-    <nav class="navbar navbar-expand-sm">
+    <nav class="navbar navbar-expand-sm navbar-light bg-light">
       <!-- Brand/logo -->
-      <a class="navbar-brand" href="#">TODO</a>
+          <h:form>
+              <h:commandLink styleClass="navbar-brand" value="TodoApp" action="login" />
+          </h:form>
 
 
     </nav>
 
-    <div class="container col-md-4">
+    <div class="container col-md-4" style="margin-top: 30px;">
         <h:form class="form-group">
             <h2>Cadastro</h2>
             <hr/>
@@ -50,22 +52,28 @@ and open the template in the editor.
             </div>
             <div class="form-group">
                 <label for="email">Email:</label>
-                <h:inputText validator="#{cadastroBean.validateEmail}" value="#{cadastroBean.email}" class="form-control" id="email" required="true" requiredMessage="Email é requerido"/>
-                <h:message styleClass="error" for="email"/>
+                <h:inputText validator="#{cadastroBean.validateEmail}" binding="#{cadastroBean.email_input}" value="#{cadastroBean.email}" class="form-control" id="email" required="true" requiredMessage="Email é requerido"/>
+                <h:message styleClass="error" id="email_error" for="email"/>
             </div>
             <div class="form-group">
                 <label for="pwd">Senha:</label>
-                <h:inputSecret validator="#{cadastroBean.validateSenha1}"  binding="#{senha}" value="#{cadastroBean.senha}" class="form-control" id="pwd" required="true" requiredMessage="Senha é requerida"/>
+                <!-- binding usado para passar variavel para validator -->
+                <h:inputSecret validator="#{cadastroBean.validateSenha1}" binding="#{senha_input}" value="#{cadastroBean.senha}" class="form-control" id="pwd" required="true" requiredMessage="Senha é requerida"/>
                 <h:message styleClass="error" for="pwd"/>                
             </div>
             <div class="form-group">
                 <label for="pwd">Confirme a senha:</label>
                 <h:inputSecret validator="#{cadastroBean.validateSenha2}" value="#{cadastroBean.repet_senha}" class="form-control" id="cpwd" required="true" requiredMessage="Confirmação da senha é requerida">
-                    <f:attribute name="senha" value="#{senha}" />
+                    <!-- atributo que é passado para validator -->
+                    <f:attribute name="senha_input" value="#{senha_input}" />
                 </h:inputSecret>
                 <h:message styleClass="error" for="cpwd"/>
             </div>
-            <h:commandButton value="Cadastrar" class="btn btn-primary" action="#{cadastroBean.cadastraUsuario()}"/>
+            <div class="clearfix">
+                <h:button class="btn btn-secondary float-left" value="Voltar" outcome="login"/>
+                <h:commandButton id="cadastro" value="Cadastrar" class="btn btn-primary float-right" action="#{cadastroBean.cadastraUsuario()}"/>
+                <p:defaultCommand target="cadastro" />
+            </div>            
         </h:form>
     </div>
 
